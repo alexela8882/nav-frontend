@@ -51,7 +51,7 @@ export default {
     },
 
     generateDynamicTable () {
-      const data = this.data.value
+      const data = this.data ? this.data.value : null
       // EXTRACT VALUE FOR HTML HEADER. 
       var col = [];
       for (var i = 0; i < data.length; i++) {
@@ -164,7 +164,7 @@ export default {
 
     <br class="my-5">
 
-    <p>{{ data ? "Data succesfully fetched." : 'Loading. Please wait...' }}</p>
+    <p>{{ data ? "" : 'Loading. Please wait...' }}</p>
 
     <p id='showData' class="my-5"></p>
 
