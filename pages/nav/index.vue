@@ -41,7 +41,32 @@ export default {
 
 <template>
   <div>
+    <Logos mb-6 />
+    <Suspense>
+      <template #fallback>
+        <div op50 italic>
+          <span animate-pulse>Loading...</span>
+        </div>
+      </template>
+    </Suspense>
+    <br>
+    <NuxtLink
+      class="btn m-3 text-sm"
+      to="/"
+    >
+      Back
+    </NuxtLink>
+
+    <br>
+
     <strong>DATA:</strong>
     <pre>{{ data ? data : 'Loading. Please wait...' }}</pre>
+
+    <NuxtLink
+      class="btn m-3 text-sm"
+      to="/"
+    >
+      Back
+    </NuxtLink>
   </div>
 </template>

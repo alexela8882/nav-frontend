@@ -33,6 +33,12 @@ const go = () => {
       >
         GO
       </button>
+      <NuxtLink
+        class="m-3 text-sm btn"
+        to="/nav"
+      >
+        NAVISION
+      </NuxtLink>
     </div>
   </div>
 </template>
