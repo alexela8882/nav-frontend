@@ -61,7 +61,11 @@ export default {
         </div>
       </template>
     </Suspense>
+    
     <br>
+
+    <button class="btn m-3 text-sm" @click="data = 'Generate again.'">Clear data</button>
+
     <NuxtLink
       class="btn m-3 text-sm"
       to="/"
