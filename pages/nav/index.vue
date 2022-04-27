@@ -123,7 +123,7 @@ export default {
 
     <pre>{{ data ? data : 'Loading. Please wait...' }}</pre>
 
-    <button class="btn m-3 text-sm" @click="getURL()">Get data</button>
+    <button :disabled="!url" class="btn m-3 text-sm" @click="getURL()">Get data</button>
 
     <NuxtLink
       class="btn m-3 text-sm"
