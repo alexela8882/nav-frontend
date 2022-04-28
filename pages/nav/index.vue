@@ -19,76 +19,73 @@ export default {
     },
 
     getURL () {
-      this.data = null // reset
-
-      let request = null
+      let self = this
+      self.data = null // reset
 
       var xhttp = new XMLHttpRequest()
-      xhttp.open("GET", this.url, true);
-      xhttp.withCredentials = true
-      xhttp.send(`Username: ${this.username}`, `Password: ${this.password}`)
       xhttp.onreadystatechange = function () {
         if (xhttp.readyState === XMLHttpRequest.DONE) {
           if (xhttp.status === 200) {
             const response = JSON.parse(xhttp.response)
-            console.log(response.value)
-            request = response
+
+            self.url = null // reset
+            self.generateDynamicTable(response) // generate table
           } else {
             const msg = 'There was a problem with the request. Please try again.'
             console.log(msg)
-            request = msg
+            self.data = msg
           }
         }
       }
-
-      setTimeout( () => {
-        this.data = request
-        this.url = null // reset
-        console.log(request)
-
-        this.generateDynamicTable()
-      }, 2000)
+      xhttp.open("GET", this.url, true)
+      xhttp.withCredentials = true
+      xhttp.send()
     },
 
-    generateDynamicTable () {
-      const data = this.data ? this.data.value : null
+    generateDynamicTable (response) {
+      const data = response ? response.value : null
       // EXTRACT VALUE FOR HTML HEADER. 
-      var col = [];
+      var col = []
       for (var i = 0; i < data.length; i++) {
         for (var key in data[i]) {
           if (col.indexOf(key) === -1) {
-            col.push(key);
+            col.push(key)
           }
         }
       }
 
       // CREATE DYNAMIC TABLE.
-      var table = document.createElement("table");
-      table.setAttribute("class", "table-auto");
+      var table = document.createElement("table")
 
       // CREATE HTML TABLE HEADER ROW USING THE EXTRACTED HEADERS ABOVE.
-
-      var tr = table.insertRow(-1);                   // TABLE ROW.
+      var tr = table.insertRow(-1) // TABLE ROW.
 
       for (var i = 0; i < col.length; i++) {
-        var th = document.createElement("th");      // TABLE HEADER.
-        th.innerHTML = col[i];
-        tr.appendChild(th);
+        var th = document.createElement("th") // TABLE HEADER.
+        th.innerHTML = col[i]
+        tr.appendChild(th)
       }
 
       // ADD JSON DATA TO THE TABLE AS ROWS.
       for (var i = 0; i < data.length; i++) {
-        tr = table.insertRow(-1);
+        tr = table.insertRow(-1)
         for (var j = 0; j < col.length; j++) {
-          var tabCell = tr.insertCell(-1);
-          tabCell.innerHTML = data[i][col[j]];
+          var tabCell = tr.insertCell(-1)
+          tabCell.innerHTML = data[i][col[j]]
         }
       }
 
       // FINALLY ADD THE NEWLY CREATED TABLE WITH JSON DATA TO A CONTAINER.
-      var divContainer = document.getElementById("showData");
-      divContainer.innerHTML = "";
-      divContainer.appendChild(table);
+      var divContainer = document.getElementById("showData")
+      divContainer.innerHTML = ""
+      divContainer.appendChild(table)
+
+      this.data = response
+    },
+
+    clearData () {
+      this.data = 'Generate again.'
+      document.getElementById("tbl-1").remove()
     }
   }
 }
@@ -107,7 +104,7 @@ export default {
     
     <br>
 
-    <button class="btn m-3 text-sm" @click="data = 'Generate again.'">Clear data</button>
+    <button class="btn m-3 text-sm" @click="clearData()">Clear data</button>
 
     <NuxtLink
       class="btn m-3 text-sm"
@@ -164,9 +161,10 @@ export default {
 
     <br class="my-5">
 
-    <p>{{ data ? "" : 'Loading. Please wait...' }}</p>
+    <!-- <p>{{ Array.isArray(data) || typeof data === 'object' ? "Data successfully fecthed" : (data !== null ? data : 'Loading. Please wait...' ) }}</p> -->
+    <p>{{ data ? (Array.isArray(data) || typeof data === 'object' ? "Data successfully fecthed" : data) : 'Loading. Please wait...' }}</p>
 
-    <p id='showData' class="my-5"></p>
+    <p id='showData' class="table-auto"></p>
 
     <button :disabled="!url || data == null" class="btn m-3 text-sm" @click="getURL()">Get data</button>
 
